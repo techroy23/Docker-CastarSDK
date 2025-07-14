@@ -14,7 +14,7 @@ Minimal Alpine Linux based Docker image to run the Castar SDK with a configurabl
 
 ## Usage 🚀
   ```bash
-  docker run --rm \
+  docker run -d \
     -e APPKEY=YOUR_CASTAR_SDK_KEY \
     ghcr.io/techroy23/docker-castarsdk:latest
   ```
