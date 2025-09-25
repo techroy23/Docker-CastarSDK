@@ -19,8 +19,8 @@ while true; do
     "$BIN_SDK" -key="$APPKEY" "$@" &
     PID=$!
 
-    # Background sleep timer (1h)
-    sleep 3600 &
+    # Background sleep timer
+    sleep 10800 &
     SLEEP_PID=$!
 
     # Wait for either the binary or the sleep to finish
