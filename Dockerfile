@@ -4,7 +4,9 @@ ARG TARGETARCH
 
 WORKDIR /app
 
-RUN apk add --no-cache ca-certificates ca-certificates-bundle unzip curl bash dos2unix iptables redsocks \
+RUN apk update \
+    && apk upgrade --no-cache \
+    && apk add --no-cache ca-certificates ca-certificates-bundle unzip curl bash dos2unix tzdata iptables redsocks \
     && update-ca-certificates
 
 RUN curl -fsSL -A "Mozilla/5.0" https://download.castarsdk.com/linux.zip -o linux.zip \
@@ -26,5 +28,3 @@ RUN dos2unix /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-
-CMD ["bash"]

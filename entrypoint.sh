@@ -9,6 +9,11 @@ log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') $*"
 }
 
+if [ -z "${APPKEY:-}" ]; then
+  log " >>> An2Kin >>> ERROR: APPKEY environment variable is not set."
+  exit 1
+fi
+
 setup_iptables() {
   log " >>> An2Kin >>> Setting up iptables and redsocks..."
   if ! iptables -t nat -L REDSOCKS -n >/dev/null 2>&1; then
@@ -81,18 +86,18 @@ check_ip() {
   fi
 }
 
-if [ -z "${APPKEY:-}" ]; then
-  log " >>> An2Kin >>> ERROR: APPKEY environment variable is not set."
-  exit 1
-fi
+main() {
+  while true; do
+      setup_proxy
+      check_ip
+      log " >>> An2Kin >>> Starting binary..."
+      "$BIN_SDK" -key="$APPKEY" "$@" &
+      PID=$!
+      log " >>> An2Kin >>> APP PID is $PID"
+      wait $PID
+      log " >>> An2Kin >>> Process exited, restarting..."
+      sleep 5
+  done
+}
 
-while true; do
-    setup_proxy
-    check_ip
-    log " >>> An2Kin >>> Starting binary..."
-    "$BIN_SDK" -key="$APPKEY" "$@" &
-    PID=$!
-    log " >>> An2Kin >>> APP PID is $PID"
-    wait $PID
-    log " >>> An2Kin >>> Process exited, restarting..."
-done
+main
