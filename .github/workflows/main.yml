@@ -1,0 +1,65 @@
+name: Generate_Docker_Image
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [trigger-sub-build]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
+
+      - name: Set Up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Update last_trigger.txt
+        run: |
+          echo "$(date '+%Y-%m-%d %H:%M:%S %Z')" > last_trigger.txt
+
+      - name: Commit last_trigger.txt
+        run: |
+          git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+          git config user.name "${{ secrets.GIT_USER_NAME }}"
+          git add last_trigger.txt
+          git commit -m "Update last_trigger.txt with latest trigger timestamp [skip ci]" || echo "No changes to commit [skip ci]"
+          git remote set-url origin https://techroy23:${{ secrets.GH_PAT }}@github.com/techroy23/Docker-CastarSDK.git
+          git push origin main
+
+      - name: Build and push image to GHCR & Docker Hub
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/docker-castarsdk:latest
+            docker.io/techroy23/docker-castarsdk:latest
