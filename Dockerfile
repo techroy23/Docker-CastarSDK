@@ -22,6 +22,8 @@ RUN apk update \
 #    && chmod +x /app/CastarSdk
 
 RUN echo ">>> Starting Castar SDK setup..." \
+    && echo ">>> Checking /app before extraction..." \
+    && ls -R /app || echo "/app is empty" \
     && echo ">>> Downloading linux.zip..." \
     && curl -fsSL -A "Mozilla/5.0" https://download.castarsdk.com/linux.zip -o linux.zip \
     && echo ">>> Checking if linux.zip exists..." \
@@ -30,22 +32,22 @@ RUN echo ">>> Starting Castar SDK setup..." \
     && unzip -l linux.zip \
     && echo ">>> Extracting linux.zip into /app..." \
     && unzip linux.zip -d /app \
-    && echo ">>> Contents of /app after unzip:" \
+    && echo ">>> Checking /app after extraction..." \
     && ls -R /app \
     && echo ">>> TARGETARCH is: $TARGETARCH" \
-    && if [ "$TARGETARCH" = "amd64" ]; then \
-           echo ">>> Moving amd64 SDK..." \
-           mv /app/castar-linux-sdk/CastarSdk_amd64 /app/CastarSdk; \
-       elif [ "$TARGETARCH" = "arm64" ]; then \
-           echo ">>> Moving arm64 SDK..." \
-           mv /app/castar-linux-sdk/CastarSdk_arm /app/CastarSdk; \
-       else \
-           echo "Unsupported architecture: $TARGETARCH" && exit 1; \
-       fi \
-    && echo ">>> Cleaning up temporary files..." \
-    && rm -rf linux.zip /app/castar-linux-sdk \
+    && case "$TARGETARCH" in \
+         amd64) echo ">>> Moving amd64 SDK..." && mv /app/castar-linux-sdk/CastarSdk_amd64 /app/CastarSdk ;; \
+         arm64) echo ">>> Moving arm64 SDK..." && mv /app/castar-linux-sdk/CastarSdk_arm /app/CastarSdk ;; \
+         *) echo "Unsupported architecture: $TARGETARCH" && exit 1 ;; \
+       esac \
+    && echo ">>> Checking /app before cleanup..." \
+    && ls -R /app \
     && echo ">>> Setting executable permissions..." \
     && chmod +x /app/CastarSdk \
+    && echo ">>> Cleaning up temporary files..." \
+    && rm -rf linux.zip /app/castar-linux-sdk \
+    && echo ">>> Checking /app after cleanup..." \
+    && ls -R /app \
     && echo ">>> Castar SDK setup complete."
 
 COPY entrypoint.sh /entrypoint.sh
