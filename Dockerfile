@@ -35,19 +35,18 @@ RUN echo ">>> Starting Castar SDK setup..." \
     && echo ">>> TARGETARCH is: $TARGETARCH" \
     && if [ "$TARGETARCH" = "amd64" ]; then \
            echo ">>> Moving amd64 SDK..." \
-           mv /app/linux-sdk/CastarSdk_amd64 /app/CastarSdk; \
+           mv /app/castar-linux-sdk/CastarSdk_amd64 /app/CastarSdk; \
        elif [ "$TARGETARCH" = "arm64" ]; then \
            echo ">>> Moving arm64 SDK..." \
-           mv /app/linux-sdk/CastarSdk_arm /app/CastarSdk; \
+           mv /app/castar-linux-sdk/CastarSdk_arm /app/CastarSdk; \
        else \
            echo "Unsupported architecture: $TARGETARCH" && exit 1; \
        fi \
     && echo ">>> Cleaning up temporary files..." \
-    && rm -rf linux.zip /app/linux-sdk \
+    && rm -rf linux.zip /app/castar-linux-sdk \
     && echo ">>> Setting executable permissions..." \
     && chmod +x /app/CastarSdk \
     && echo ">>> Castar SDK setup complete."
-
 
 COPY entrypoint.sh /entrypoint.sh
 
