@@ -9,18 +9,6 @@ RUN apk update \
     && apk add --no-cache ca-certificates ca-certificates-bundle unzip curl bash dos2unix tzdata iptables redsocks \
     && update-ca-certificates
 
-#RUN curl -fsSL -A "Mozilla/5.0" https://download.castarsdk.com/linux.zip -o linux.zip \
-#    && unzip linux.zip -d /app \
-#    && if [ "$TARGETARCH" = "amd64" ]; then \
-#           mv /app/linux-sdk/CastarSdk_amd64 /app/CastarSdk; \
-#       elif [ "$TARGETARCH" = "arm64" ]; then \
-#           mv /app/linux-sdk/CastarSdk_arm /app/CastarSdk; \
-#       else \
-#           echo "Unsupported architecture: $TARGETARCH" && exit 1; \
-#       fi \
-#    && rm -rf linux.zip /app/linux-sdk \
-#    && chmod +x /app/CastarSdk
-
 RUN echo ">>> Starting Castar SDK setup..." \
     && echo ">>> Checking /app before extraction..." \
     && ls -R /app || echo "/app is empty" \
@@ -36,8 +24,8 @@ RUN echo ">>> Starting Castar SDK setup..." \
     && ls -R /app \
     && echo ">>> TARGETARCH is: $TARGETARCH" \
     && case "$TARGETARCH" in \
-         amd64) echo ">>> Moving amd64 SDK..." && mv /app/castar-linux-sdk/CastarSdk_amd64 /app/CastarSdk ;; \
-         arm64) echo ">>> Moving arm64 SDK..." && mv /app/castar-linux-sdk/CastarSdk_arm /app/CastarSdk ;; \
+         amd64) echo ">>> Moving amd64 SDK..." && mv /app/linux-sdk/CastarSdk_amd64 /app/CastarSdk ;; \
+         arm64) echo ">>> Moving arm64 SDK..." && mv /app/linux-sdk/CastarSdk_arm /app/CastarSdk ;; \
          *) echo "Unsupported architecture: $TARGETARCH" && exit 1 ;; \
        esac \
     && echo ">>> Checking /app before cleanup..." \
@@ -45,7 +33,7 @@ RUN echo ">>> Starting Castar SDK setup..." \
     && echo ">>> Setting executable permissions..." \
     && chmod +x /app/CastarSdk \
     && echo ">>> Cleaning up temporary files..." \
-    && rm -rf linux.zip /app/castar-linux-sdk \
+    && rm -rf linux.zip /app/linux-sdk \
     && echo ">>> Checking /app after cleanup..." \
     && ls -R /app \
     && echo ">>> Castar SDK setup complete."
