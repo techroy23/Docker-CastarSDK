@@ -33,12 +33,9 @@ sudo sysctl -w net.core.wmem_max=8000000
 ```bash
 docker run -d \
   --name=castarsdk \
-  --pull=always \
-  --restart=always \
-  --privileged \
-  --log-driver=json-file \
-  --log-opt max-size=5m \
-  --log-opt max-file=3 \
+  --cpus=0.25 --pull=always --restart=always \
+  --log-driver=json-file --log-opt max-size=1m --log-opt max-file=1 \
+  --cap-add=NET_ADMIN --cap-add=NET_RAW --sysctl net.ipv4.ip_forward=1 \
   -e APPKEY=AbCdEfGhIjKLmNo \
   -e PROXY=123.456.789.012:34567 \
   techroy23/docker-castarsdk:latest
