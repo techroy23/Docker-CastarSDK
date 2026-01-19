@@ -9,10 +9,31 @@ log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') $*"
 }
 
-if [ -z "${APPKEY:-}" ]; then
-  log " >>> An2Kin >>> ERROR: APPKEY environment variable is not set."
-  exit 1
-fi
+validate_appkey_input() {
+  local APPKEY="${APPKEY:-}"
+  local ARG="$1"
+
+  if [ -z "$APPKEY" ] && [ $# -eq 0 ]; then
+    log " >>> An2Kin >>> ERROR: APPKEY not provided (env or arg)."
+    exit 1
+
+  elif [ $# -gt 1 ]; then
+    log " >>> An2Kin >>> ERROR: Too many positional arguments. Only one APPKEY argument is allowed."
+    exit 1
+
+  elif [ -n "$APPKEY" ] && [ -n "$ARG" ]; then
+    log " >>> An2Kin >>> ERROR: Both APPKEY env and positional argument provided. Please use only one."
+    exit 1
+
+  elif [ -n "$ARG" ]; then
+    APPKEY="$ARG"
+    log " >>> An2Kin >>> INFO: Using APPKEY from positional argument: $APPKEY"
+  else
+    log " >>> An2Kin >>> INFO: Using APPKEY from environment: $APPKEY"
+  fi
+
+  export APPKEY
+}
 
 setup_iptables() {
   log " >>> An2Kin >>> Setting up iptables and redsocks..."
@@ -35,9 +56,11 @@ cleanup() {
   iptables -t nat -F REDSOCKS 2>/dev/null || true
   iptables -t nat -D OUTPUT -p tcp -j REDSOCKS 2>/dev/null || true
   iptables -t nat -X REDSOCKS 2>/dev/null || true
-  kill $REDSOCKS_PID 2>/dev/null || true
+
+  if [ -n "$REDSOCKS_PID" ]; then
+    kill "$REDSOCKS_PID" 2>/dev/null || true
+  fi
 }
-trap cleanup EXIT
 
 setup_proxy() {
   if [ -n "$PROXY" ]; then
@@ -87,6 +110,8 @@ check_ip() {
 }
 
 main() {
+  validate_appkey_input "$@"
+  trap cleanup EXIT
   while true; do
       setup_proxy
       check_ip
