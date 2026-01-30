@@ -15,6 +15,11 @@ validate_appkey_input() {
 
   if [ -z "$APPKEY" ] && [ $# -eq 0 ]; then
     log " >>> An2Kin >>> ERROR: APPKEY not provided (env or arg)."
+    log " >>> An2Kin >>> HINT"
+    log " >>> An2Kin >>> docker run -d --name=castarsdk -e APPKEY=AbCdEfGhIjKLmNo -e PROXY=123.456.789.012:34567 techroy23/docker-castarsdk:latest"
+    log " >>> An2Kin >>> OR"
+    log " >>> An2Kin >>> docker run -d --name=castarsdk -e PROXY=123.456.789.012:34567 techroy23/docker-castarsdk:latest AbCdEfGhIjKLmNo"
+    log " >>> An2Kin >>> For more details, check the README: https://github.com/techroy23/Docker-CastarSDK"
     exit 1
 
   elif [ $# -gt 1 ]; then
