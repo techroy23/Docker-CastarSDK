@@ -5,7 +5,7 @@ A minimal Alpine based Docker image for running the **CastarSDK**.
 ## Links
 | DockerHub | GitHub | Invite |
 |----------|----------|----------|
-| [![Docker Hub](https://img.shields.io/badge/ㅤ-View%20on%20Docker%20Hub-blue?logo=docker&style=for-the-badge)](https://hub.docker.com/r/techroy23/docker-castarsdk) | [![GitHub Repo](https://img.shields.io/badge/ㅤ-View%20on%20GitHub-black?logo=github&style=for-the-badge)](https://github.com/techroy23/Docker-CastarSDK) | [![Invite Link](https://img.shields.io/badge/ㅤ-Join%20CastarSDK%20Now-brightgreen?logo=linktree&style=for-the-badge)](https://www.castarsdk.com/register?c=c5b7ba22) |
+| [![Docker Hub](https://img.shields.io/badge/ㅤ-View%20on%20Docker%20Hub-blue?logo=docker&style=for-the-badge)](https://hub.docker.com/r/techroy23/docker-castarsdk) | [![GitHub Repo](https://img.shields.io/badge/ㅤ-View%20on%20GitHub-black?logo=github&style=for-the-badge)](https://github.com/techroy23/Docker-CastarSDK) | [![Invite Link](https://img.shields.io/badge/ㅤ-Join%20CastarSDK%20Now-brightgreen?logo=linktree&style=for-the-badge)](https://www.castarsdk.net/register?c=c5b7ba22) |
 
 ## Features
 - Lightweight Alpine Linux base image.
