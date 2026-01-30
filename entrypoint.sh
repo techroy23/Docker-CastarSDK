@@ -9,9 +9,9 @@ log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') $*"
 }
 
-validate_appkey_input() {
-  local ARG="$1"
+ARG=$1
 
+validate_appkey_input() {
   # Case 1: Neither env var nor positional arg provided
   if [ -z "$APPKEY" ] && [ -z "$ARG" ]; then
     log " >>> An2Kin >>> ERROR: APPKEY not provided (env or arg)."
@@ -121,7 +121,7 @@ check_ip() {
 }
 
 main() {
-  validate_appkey_input "$@"
+  validate_appkey_input
   trap cleanup EXIT
   while true; do
       setup_proxy
