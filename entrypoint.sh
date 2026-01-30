@@ -10,10 +10,10 @@ log() {
 }
 
 validate_appkey_input() {
-  local APPKEY="${APPKEY:-}"
   local ARG="$1"
 
-  if [ -z "$APPKEY" ] && [ $# -eq 0 ]; then
+  # Case 1: Neither env var nor positional arg provided
+  if [ -z "$APPKEY" ] && [ -z "$ARG" ]; then
     log " >>> An2Kin >>> ERROR: APPKEY not provided (env or arg)."
     log " >>> An2Kin >>> HINT"
     log " >>> An2Kin >>> docker run -d --name=castarsdk -e APPKEY=AbCdEfGhIjKLmNo -e PROXY=123.456.789.012:34567 techroy23/docker-castarsdk:latest"
@@ -22,23 +22,29 @@ validate_appkey_input() {
     log " >>> An2Kin >>> For more details, check the README: https://github.com/techroy23/Docker-CastarSDK"
     exit 1
 
+  # Case 2: Too many positional arguments
   elif [ $# -gt 1 ]; then
     log " >>> An2Kin >>> ERROR: Too many positional arguments. Only one APPKEY argument is allowed."
     exit 1
 
+  # Case 3: Both env var and positional arg provided
   elif [ -n "$APPKEY" ] && [ -n "$ARG" ]; then
     log " >>> An2Kin >>> ERROR: Both APPKEY env and positional argument provided. Please use only one."
     exit 1
 
+  # Case 4: Positional arg provided
   elif [ -n "$ARG" ]; then
     APPKEY="$ARG"
     log " >>> An2Kin >>> INFO: Using APPKEY from positional argument: $APPKEY"
+
+  # Case 5: Env var provided
   else
     log " >>> An2Kin >>> INFO: Using APPKEY from environment: $APPKEY"
   fi
 
   export APPKEY
 }
+
 
 setup_iptables() {
   log " >>> An2Kin >>> Setting up iptables and redsocks..."
