@@ -53,4 +53,4 @@ docker run -d \
 ```
 
 # Invite Link
-### https://www.castarsdk.com/register?c=c5b7ba22
+### https://www.castarsdk.net/register?c=c5b7ba22

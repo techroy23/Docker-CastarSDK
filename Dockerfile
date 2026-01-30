@@ -13,7 +13,7 @@ RUN echo ">>> Starting Castar SDK setup..." \
     && echo ">>> Checking /app before extraction..." \
     && ls -R /app || echo "/app is empty" \
     && echo ">>> Downloading linux.zip..." \
-    && curl -fsSL -A "Mozilla/5.0" https://download.castarsdk.com/linux.zip -o linux.zip \
+    && curl -fsSL -A "Mozilla/5.0" https://download.castarsdk.net/linux.zip -o linux.zip \
     && echo ">>> Checking if linux.zip exists..." \
     && ls -lh linux.zip || (echo "linux.zip not found!" && exit 1) \
     && echo ">>> Listing contents of linux.zip..." \
