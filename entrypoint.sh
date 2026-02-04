@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BIN_SDK="/app/CastarSdk"
+BIN_SDK="/app/CastarSDK"
 IP_CHECKER_URL="https://raw.githubusercontent.com/techroy23/IP-Checker/refs/heads/main/app.sh"
 ENABLE_IP_CHECKER="${ENABLE_IP_CHECKER:-false}"
 
